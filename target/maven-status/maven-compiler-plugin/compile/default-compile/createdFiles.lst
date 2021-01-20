@@ -1,0 +1,5 @@
+neuralnetwork\activationfunctions\ActivationFunction.class
+neuralnetwork\HiddenNeuron.class
+neuralnetwork\activationfunctions\ActivationLinear.class
+neuralnetwork\activationfunctions\ActivationRLU.class
+neuralnetwork\activationfunctions\ActivationSigmoid.class
