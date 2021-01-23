@@ -1,4 +1,4 @@
-package neuralnetwork;
+package neuralnetwork.neurons;
 
 import lombok.Data;
 
@@ -6,13 +6,10 @@ import neuralnetwork.activationfunctions.ActivationFunction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-
 @Data
-public class HiddenNeuron {
+public class HiddenNeuron extends BasisNeuron {
     static final Logger logger = LogManager.getLogger(HiddenNeuron.class.getName());
 
-    private double value = 0.0;
     private double weightedSum = 0.0;
     private double bias;
     private double[] weights;

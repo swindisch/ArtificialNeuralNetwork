@@ -1,9 +1,7 @@
 package neuralnetwork;
 
-import neuralnetwork.activationfunctions.ActivationLinear;
 import neuralnetwork.activationfunctions.ActivationRLU;
-import neuralnetwork.activationfunctions.ActivationSigmoid;
-import org.junit.jupiter.api.DisplayName;
+import neuralnetwork.neurons.HiddenNeuron;
 
 import static org.junit.jupiter.api.Assertions.*;
 
