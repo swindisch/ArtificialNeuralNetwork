@@ -65,6 +65,10 @@ public class InputLayer extends BaseLayer<InputNeuron> {
         return values;
     }
 
+    public double getSingleOutputValue(int idx) {
+        return layer.get(idx).getValue();
+    }
+
     public void setInputValues(double[] values) {
         if (values.length != size) {
             logger.error("Length of layer and values must be equal!");

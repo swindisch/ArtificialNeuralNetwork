@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class HiddenLayer extends BaseLayer<HiddenNeuron> {
     static final Logger logger = LogManager.getLogger(HiddenLayer.class.getName());
@@ -75,6 +76,16 @@ public class HiddenLayer extends BaseLayer<HiddenNeuron> {
         double[][] weights = new double[size][numWeights];
         double[] bias = new double[size];
 
+        Random r = new Random(42);
+
+        for (int j = 0; j < size; j++) {
+            bias[j] = r.nextDouble();
+
+            for (int i = 0; i < numWeights; i++) {
+                weights[j][i] = ((double) (r.nextInt(100 + 100) - 100)) / 100.0;
+            }
+        }
+
         createLayer(weights, bias);
     }
 
@@ -131,7 +142,31 @@ public class HiddenLayer extends BaseLayer<HiddenNeuron> {
         }
     }
 
+    public double[] calcOutput(double[] input)
+    {
+        if (input == null) {
+            logger.error("Input value must not be null!");
+            return null;
+        }
 
+        if (input.length != numWeights) {
+            logger.error("Length of input and weights must be equal!");
+            return null;
+        }
+
+        double[] output = new double[size];
+
+        int idx = 0;
+        for (HiddenNeuron neuron: layer) {
+            output[idx++] = neuron.calcActivation(input);
+        }
+
+        return output;
+    }
+
+    public double getSingleOutputValue(int idx) {
+        return layer.get(idx).getValue();
+    }
 
     public String toString() {
         StringBuilder str =new StringBuilder();

@@ -58,7 +58,6 @@ class HiddenLayerTest {
 
     @Test
     void createFilledHiddenLayer() {
-
         layer.createLayer(weights, bias);
 
         double[] outputBias = layer.getBiasValues();
@@ -111,6 +110,17 @@ class HiddenLayerTest {
         layer.createLayer(weights, bias);
         System.out.println(layer.toString());
     }
+
+    @Test
+    void testCalculation() {
+        layer.createLayer(weights, bias);
+
+        double[] layerOutput = layer.calcOutput(input);
+
+        assertEquals(8, layerOutput.length);
+        assertArrayEquals(new double[]{32.0, 64, 96.0, 128.0, 160.0, 192.0, 224.0, 256.0}, layerOutput);
+    }
+
 
     @Test
     void TestBigLayer() throws InterruptedException {
