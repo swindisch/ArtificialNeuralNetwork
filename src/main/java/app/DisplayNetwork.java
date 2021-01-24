@@ -22,9 +22,11 @@ public class DisplayNetwork {
             int numNeuronsStart = model.getLayerSize(idxLayer);
             int numNeuronsEnd = model.getLayerSize(idxLayer + 1);
 
-            for (int idxNeuronStart = 0; idxNeuronStart < numNeuronsStart; idxNeuronStart++) {
-                for (int idxNeuronEnd = 0; idxNeuronEnd < numNeuronsEnd; idxNeuronEnd++) {
+            for (int idxNeuronEnd = 0; idxNeuronEnd < numNeuronsEnd; idxNeuronEnd++) {
 
+                double[] weights = model.getWeights(idxLayer + 1, idxNeuronEnd);
+
+                for (int idxNeuronStart = 0; idxNeuronStart < numNeuronsStart; idxNeuronStart++) {
 
                     int ySizeStart = (int) (height / (numNeuronsStart + 1));
                     int ySizeEnd = (int) (height / (numNeuronsEnd + 1));
@@ -32,13 +34,15 @@ public class DisplayNetwork {
                     int yPosStart = (idxNeuronStart + 1) * ySizeStart;
                     int yPosEnd =  (idxNeuronEnd + 1) * ySizeEnd;
 
-                    double value = 1;
+                    double value = weights[idxNeuronStart];
+                    int colOffset = Math.abs((int) (200.0 * value));
+                    if (colOffset > 200) colOffset = 200;
                     Color col;
 
-                    if (value > 0.0)
-                        col = new Color(255,150,150);
+                    if (value < 0.0)
+                        col = new Color(50 + colOffset,0,50);
                     else
-                        col = new Color(150, 255, 150);
+                        col = new Color(0, 50 + colOffset, 50);
 
                     g.setColor(col);
                     g.drawLine(xPosStart, yPosStart, xPosEnd, yPosEnd);
@@ -65,12 +69,14 @@ public class DisplayNetwork {
                 int yPos = (idxNeuron + 1) * ySize;
 
                 double value = model.getValue(idxLayer, idxNeuron);
+                int colOffset = Math.abs((int) (200.0 * value));
+                if (colOffset > 200) colOffset = 200;
                 Color col;
 
-                if (value > 0.0)
-                    col = new Color(255,150,150);
+                if (value < 0.0)
+                    col = new Color(50 + colOffset,0,50);
                 else
-                    col = new Color(150, 255, 150);
+                    col = new Color(0, 50 + colOffset, 50);
 
                 g.setColor(col);
                 g.fillOval(xPos - radius, yPos - radius, radius * 2, radius * 2);

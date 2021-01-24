@@ -11,6 +11,11 @@ public class InputLayer extends BaseLayer<InputNeuron> {
         super(size);
     }
 
+    @Override
+    public double[] getNeuronWeights(int idxNeuron) {
+        return new double[0];
+    }
+
     // TODO implement validation method
 
     public void createLayer(double[] values) {
@@ -63,10 +68,6 @@ public class InputLayer extends BaseLayer<InputNeuron> {
         }
 
         return values;
-    }
-
-    public double getSingleOutputValue(int idx) {
-        return layer.get(idx).getValue();
     }
 
     public void setInputValues(double[] values) {

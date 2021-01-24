@@ -76,7 +76,7 @@ public class HiddenLayer extends BaseLayer<HiddenNeuron> {
         double[][] weights = new double[size][numWeights];
         double[] bias = new double[size];
 
-        Random r = new Random(42);
+        Random r = new Random();
 
         for (int j = 0; j < size; j++) {
             bias[j] = r.nextDouble();
@@ -164,10 +164,6 @@ public class HiddenLayer extends BaseLayer<HiddenNeuron> {
         return output;
     }
 
-    public double getSingleOutputValue(int idx) {
-        return layer.get(idx).getValue();
-    }
-
     public String toString() {
         StringBuilder str =new StringBuilder();
         str.append("HiddenLayer " + idx + " with " + size + " neurons\n");
@@ -188,5 +184,11 @@ public class HiddenLayer extends BaseLayer<HiddenNeuron> {
         str.append("]\n");
 
         return str.toString();
+    }
+
+    @Override
+    public double[] getNeuronWeights(int idxNeuron) {
+        double[] weights = layer.get(idxNeuron).getWeights();
+        return weights;
     }
 }

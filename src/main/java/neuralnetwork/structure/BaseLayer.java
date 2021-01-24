@@ -16,4 +16,10 @@ public abstract class BaseLayer<T extends BasisNeuron> {
         this.size = size;
         this.layer = new ArrayList<>(size);
     }
+
+    public double getSingleOutputValue(int idx) {
+        return layer.get(idx).getValue();
+    }
+
+    public abstract double[] getNeuronWeights(int idxNeuron);
 }

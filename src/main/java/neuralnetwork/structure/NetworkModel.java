@@ -19,6 +19,9 @@ public class NetworkModel {
     ArrayList<HiddenLayer> hiddenLayers = new ArrayList<>();
     OutputLayer outputLayer = null;
 
+    ArrayList<BaseLayer> layers = new ArrayList<>();
+
+
     public NetworkModel(int sizeInputLayer, int[] sizesHiddenLayer, ActivationEnum[] actFuncHiddenLayer, int sizeOutputLayer, ActivationEnum actFuncOutLayer) {
         this.sizeInputLayer = sizeInputLayer;
         this.sizesHiddenLayer = sizesHiddenLayer;
@@ -37,8 +40,11 @@ public class NetworkModel {
 
 
     public void createModel() {
+        layers.clear();
+
         inputLayer = new InputLayer(sizeInputLayer);
         inputLayer.createLayer();
+        layers.add(inputLayer);
 
         hiddenLayers.clear();
         int sizePrevLayer = sizeInputLayer;
@@ -47,11 +53,13 @@ public class NetworkModel {
             HiddenLayer layer = new HiddenLayer(idx + 1, sizesHiddenLayer[idx], sizePrevLayer, actFuncHiddenLayer[idx]);
             layer.createLayer();
             hiddenLayers.add(layer);
+            layers.add(layer);
             sizePrevLayer = sizesHiddenLayer[idx];
         }
 
         outputLayer = new OutputLayer(sizeOutputLayer, sizePrevLayer, actFuncOutLayer);
         outputLayer.createLayer();
+        layers.add(outputLayer);
     }
 
     public double[] feedforward(double[] input) {
@@ -72,22 +80,30 @@ public class NetworkModel {
     }
 
     public int getLayerSize(int idxLayer) {
-        if (idxLayer == 0)
+        return layers.get(idxLayer).size;
+
+        /*if (idxLayer == 0)
             return inputLayer.size;
 
         if (idxLayer > sizesHiddenLayer.length)
             return outputLayer.size;
 
-        return sizesHiddenLayer[idxLayer - 1];
+        return sizesHiddenLayer[idxLayer - 1];*/
     }
 
     public double getValue(int idxLayer, int idxNeuron) {
-        if (idxLayer == 0)
+        return layers.get(idxLayer).getSingleOutputValue(idxNeuron);
+
+        /*if (idxLayer == 0)
             return inputLayer.getSingleOutputValue(idxNeuron);
 
         if (idxLayer > sizesHiddenLayer.length)
             return outputLayer.getSingleOutputValue(idxNeuron);
 
         return hiddenLayers.get(idxLayer - 1).getSingleOutputValue(idxNeuron);
+    */}
+
+    public double[] getWeights(int idxLayer, int idxNeuron) {
+        return layers.get(idxLayer).getNeuronWeights(idxNeuron);
     }
 }
