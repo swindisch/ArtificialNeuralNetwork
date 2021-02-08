@@ -47,4 +47,52 @@ class NetworkModelTest {
         System.out.println((Arrays.toString(output)));
     }
 
+    @Test
+    void cloneModel() {
+        int[] hiddenLayers = new int[2];
+        hiddenLayers[0] = 4;
+        hiddenLayers[1] = 6;
+
+        ActivationEnum[] hiddenAcFun = new ActivationEnum[2];
+        hiddenAcFun[0] = ActivationEnum.LINEAR;
+        hiddenAcFun[1] = ActivationEnum.LINEAR;
+
+        NetworkModel model = new NetworkModel(4, hiddenLayers, hiddenAcFun, 2, ActivationEnum.LINEAR);
+        model.createModel();
+
+        double[] inputPic = new double[4];
+        Random r = new Random(42);
+        for (int idx = 0; idx < inputPic.length; idx++) {
+            inputPic[idx] = r.nextDouble();
+        }
+        NetworkModel clonedModel = model.cloneModel();
+
+        model.feedforward(inputPic);
+        clonedModel.feedforward(inputPic);
+
+        int sourceNumLayers = model.getNumLayers();
+        int clonedNumLayers = clonedModel.getNumLayers();
+
+        assertEquals(sourceNumLayers, clonedNumLayers);
+
+        for (int idxLayer = 0; idxLayer < sourceNumLayers; idxLayer++) {
+
+            int sourceNumNeurons = model.getLayerSize(idxLayer);
+            int clonedNumNeurons = clonedModel.getLayerSize(idxLayer);
+
+            assertEquals(sourceNumNeurons, clonedNumNeurons);
+
+            for (int idxNeuron = 0; idxNeuron < sourceNumNeurons; idxNeuron++) {
+                double sourceValue = model.getValue(idxLayer, idxNeuron);
+                double clonedValue = clonedModel.getValue(idxLayer, idxNeuron);
+
+                assertEquals(sourceValue, clonedValue);
+
+                double[] sourceWeights = model.getWeights(idxLayer, idxNeuron);
+                double[] clonedWeights = clonedModel.getWeights(idxLayer, idxNeuron);
+
+                assertArrayEquals(sourceWeights, clonedWeights);
+            }
+        }
+    }
 }

@@ -62,6 +62,40 @@ public class NetworkModel {
         layers.add(outputLayer);
     }
 
+    public void createModel(InputLayer sourceInputLayer, ArrayList<HiddenLayer> sourceHiddenLayers, OutputLayer sourceOutputLayer) {
+        layers.clear();
+
+        inputLayer = new InputLayer(sizeInputLayer);
+        inputLayer.createLayer(sourceInputLayer.getOutputValues());
+        layers.add(inputLayer);
+
+        hiddenLayers.clear();
+        int sizePrevLayer = sizeInputLayer;
+
+        for (int idx = 0; idx < sizesHiddenLayer.length; idx++) {
+            HiddenLayer layer = new HiddenLayer(idx + 1, sizesHiddenLayer[idx], sizePrevLayer, actFuncHiddenLayer[idx]);
+            layer.createLayer(sourceHiddenLayers.get(idx).getWeights(), sourceHiddenLayers.get(idx).getBiasValues());
+            hiddenLayers.add(layer);
+            layers.add(layer);
+            sizePrevLayer = sizesHiddenLayer[idx];
+        }
+
+        outputLayer = new OutputLayer(sizeOutputLayer, sizePrevLayer, actFuncOutLayer);
+        outputLayer.createLayer(sourceOutputLayer.getWeights(), sourceOutputLayer.getBiasValues());
+        layers.add(outputLayer);
+    }
+
+
+    public NetworkModel cloneModel() {
+
+        NetworkModel newModel = new NetworkModel(sizeInputLayer, sizesHiddenLayer, actFuncHiddenLayer, sizeOutputLayer, actFuncOutLayer);
+        newModel.createModel(inputLayer, hiddenLayers, outputLayer);
+
+        return newModel;
+    }
+
+
+
     public double[] feedforward(double[] input) {
         inputLayer.setInputValues(input);
         double[] output = inputLayer.getOutputValues();
