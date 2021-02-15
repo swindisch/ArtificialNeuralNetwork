@@ -1,15 +1,12 @@
 package neuralnetwork.neurons;
 
 import lombok.Data;
-
+import lombok.extern.slf4j.Slf4j;
 import neuralnetwork.activationfunctions.ActivationFunction;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Data
+@Slf4j
 public class HiddenNeuron extends BasisNeuron {
-    static final Logger logger = LogManager.getLogger(HiddenNeuron.class.getName());
-
     private double weightedSum = 0.0;
     private double bias;
     private double[] weights;
@@ -25,22 +22,22 @@ public class HiddenNeuron extends BasisNeuron {
     public double calcSum(double[] input)
     {
         if (input == null) {
-            logger.error("Input array most not be null!");
+            log.error("Input array most not be null!");
             return 0;
         }
 
         if (input.length < 1) {
-            logger.error("Input array most not be empty!");
+            log.error("Input array most not be empty!");
             return 0;
         }
 
         if (weights == null) {
-            logger.error("Weights array most not be null!");
+            log.error("Weights array most not be null!");
             return 0;
         }
 
         if (weights.length < 1) {
-            logger.error("Weights array most not be empty!");
+            log.error("Weights array most not be empty!");
             return 0;
         }
 
@@ -48,7 +45,7 @@ public class HiddenNeuron extends BasisNeuron {
         int sizeWeights = weights.length;
 
         if (sizeInput != sizeWeights) {
-            logger.warn("Size of weights and input array should be equal!");
+            log.warn("Size of weights and input array should be equal!");
             return 0;
         }
 

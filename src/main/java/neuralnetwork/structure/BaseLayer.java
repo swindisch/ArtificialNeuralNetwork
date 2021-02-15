@@ -1,19 +1,22 @@
 package neuralnetwork.structure;
 
-import neuralnetwork.neurons.BasisNeuron;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.ArrayList;
 
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import neuralnetwork.neurons.BasisNeuron;
+
+@Slf4j
+@Getter
 public abstract class BaseLayer<T extends BasisNeuron> {
-    static final Logger logger = LogManager.getLogger(InputLayer.class.getName());
 
     protected int size;
+    protected int numWeights = 0;
     protected ArrayList<T> layer;
 
-    public BaseLayer(int size) {
+    public BaseLayer(int size, int numWeights) {
         this.size = size;
+        this.numWeights = numWeights;
         this.layer = new ArrayList<>(size);
     }
 

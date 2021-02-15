@@ -1,14 +1,12 @@
 package neuralnetwork.structure;
 
-import neuralnetwork.activationfunctions.ActivationEnum;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import lombok.extern.slf4j.Slf4j;
+import neuralnetwork.activationfunctions.ActivationEnum;
 
+@Slf4j
 public class NetworkModel {
-    static final Logger logger = LogManager.getLogger(NetworkModel.class.getName());
-
     int sizeInputLayer = 0;
     int[] sizesHiddenLayer = null;
     ActivationEnum[] actFuncHiddenLayer = null;
@@ -39,7 +37,7 @@ public class NetworkModel {
     }
 
 
-    public void createModel() {
+    public void createModel(boolean setRandom, boolean setDefault, double defaultValue) {
         layers.clear();
 
         inputLayer = new InputLayer(sizeInputLayer);
@@ -51,14 +49,14 @@ public class NetworkModel {
 
         for (int idx = 0; idx < sizesHiddenLayer.length; idx++) {
             HiddenLayer layer = new HiddenLayer(idx + 1, sizesHiddenLayer[idx], sizePrevLayer, actFuncHiddenLayer[idx]);
-            layer.createLayer();
+            layer.createLayer(setRandom, setDefault, defaultValue);
             hiddenLayers.add(layer);
             layers.add(layer);
             sizePrevLayer = sizesHiddenLayer[idx];
         }
 
         outputLayer = new OutputLayer(sizeOutputLayer, sizePrevLayer, actFuncOutLayer);
-        outputLayer.createLayer();
+        outputLayer.createLayer(setRandom, setDefault, defaultValue);
         layers.add(outputLayer);
     }
 
@@ -139,5 +137,74 @@ public class NetworkModel {
 
     public double[] getWeights(int idxLayer, int idxNeuron) {
         return layers.get(idxLayer).getNeuronWeights(idxNeuron);
+    }
+
+
+    private int getDNASize() {
+        int dnaSize = 0;
+
+        for (BaseLayer layer: layers) {
+            if (layer instanceof InputLayer) continue;
+            HiddenLayer hlayer = (HiddenLayer) layer;
+
+            // number of bias
+            dnaSize += hlayer.getSize();
+            // number of weights
+            dnaSize += hlayer.getNumWeights() * hlayer.getSize();
+        }
+
+        return dnaSize;
+    }
+
+
+    public double[] getDNA() {
+
+        double[] dna;
+        int dnaSize = getDNASize();
+        dna = new double[dnaSize];
+
+        int offset = 0;
+
+        for (BaseLayer layer: layers) {
+            if (layer instanceof InputLayer) continue;
+            HiddenLayer hlayer = (HiddenLayer) layer;
+
+            System.arraycopy(hlayer.getBiasValues(), 0, dna, offset, hlayer.getSize());
+            offset += hlayer.getSize();
+
+            for (int i = 0; i < hlayer.getSize(); i++) {
+                System.arraycopy(hlayer.getNeuronWeights(i), 0, dna, offset, hlayer.getNumWeights());
+                offset += hlayer.getNumWeights();
+            }
+        }
+        return dna;
+    }
+
+    public void setDNA(double[] dna) {
+
+        int dnaSize = getDNASize();
+        int offset = 0;
+
+        if (dnaSize != dna.length) {
+            throw new InvalidParameterException(String.format("dnaSize %d and dna.length %d different", dnaSize, dna.length));
+        }
+
+        for (BaseLayer layer: layers) {
+            if (layer instanceof InputLayer) continue;
+            HiddenLayer hlayer = (HiddenLayer) layer;
+
+            double[] bias = new double[hlayer.getSize()];
+            System.arraycopy(dna, offset, bias, 0, hlayer.getSize());
+            hlayer.setBiasValues(bias);
+
+            offset += hlayer.getSize();
+
+            for (int i = 0; i < hlayer.getSize(); i++) {
+                double[] weights = new double[hlayer.getNumWeights()];
+                System.arraycopy(dna, offset, weights, 0, hlayer.getNumWeights());
+                hlayer.setNeuronWeights(i, weights);
+                offset += hlayer.getNumWeights();
+            }
+        }
     }
 }

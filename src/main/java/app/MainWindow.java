@@ -1,9 +1,12 @@
 package app;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+@Slf4j
 public class MainWindow extends JFrame {
 
 	public static void main(String[] args) {
@@ -11,6 +14,8 @@ public class MainWindow extends JFrame {
 	}
 
 	public MainWindow() {
+		log.debug("MainWindow called");
+
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize( 1200, 600);
 		setExtendedState(MAXIMIZED_BOTH);

@@ -39,10 +39,12 @@ public class DisplayNetwork {
                     if (colOffset > 200) colOffset = 200;
                     Color col;
 
-                    if (value < 0.0)
-                        col = new Color(50 + colOffset,0,50);
-                    else
+                    if (value < 0.0) {
+                        col = new Color(50 + colOffset, 0, 50);
+                    }
+                    else {
                         col = new Color(0, 50 + colOffset, 50);
+                    }
 
                     g.setColor(col);
                     g.drawLine(xPosStart, yPosStart, xPosEnd, yPosEnd);

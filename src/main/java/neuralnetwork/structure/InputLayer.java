@@ -1,14 +1,13 @@
 package neuralnetwork.structure;
 
+import lombok.extern.slf4j.Slf4j;
 import neuralnetwork.neurons.InputNeuron;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
+@Slf4j
 public class InputLayer extends BaseLayer<InputNeuron> {
-    static final Logger logger = LogManager.getLogger(InputLayer.class.getName());
 
     public InputLayer(int size) {
-        super(size);
+        super(size, 0);
     }
 
     @Override
@@ -20,22 +19,22 @@ public class InputLayer extends BaseLayer<InputNeuron> {
 
     public void createLayer(double[] values) {
         if (size < 1) {
-            logger.error("Size must be greater than 0!");
+            log.error("Size must be greater than 0!");
             return;
         }
 
         if (values == null) {
-            logger.error("Values must not be null!");
+            log.error("Values must not be null!");
             return;
         }
 
         if (values.length < 1) {
-            logger.error("Empty value array not allow!");
+            log.error("Empty value array not allow!");
             return;
         }
 
         if (layer == null) {
-            logger.error("Input array must be created!");
+            log.error("Input array must be created!");
             return;
         }
 
@@ -48,7 +47,7 @@ public class InputLayer extends BaseLayer<InputNeuron> {
 
     public void createLayer() {
         if (size < 1) {
-            logger.error("Size must be greater than 0!");
+            log.error("Size must be greater than 0!");
             return;
         }
         double[] values = new double[size];
@@ -57,7 +56,7 @@ public class InputLayer extends BaseLayer<InputNeuron> {
 
     public double[] getOutputValues() {
         if (size < 1) {
-            logger.error("Size must be greater than 0!");
+            log.error("Size must be greater than 0!");
         }
 
         double[] values = new double[size];
@@ -72,7 +71,7 @@ public class InputLayer extends BaseLayer<InputNeuron> {
 
     public void setInputValues(double[] values) {
         if (values.length != size) {
-            logger.error("Length of layer and values must be equal!");
+            log.error("Length of layer and values must be equal!");
         }
 
         int idx = 0;

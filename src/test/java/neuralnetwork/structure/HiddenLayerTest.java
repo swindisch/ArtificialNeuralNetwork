@@ -40,7 +40,7 @@ class HiddenLayerTest {
 
     @Test
     void createHiddenLayer() {
-        layer.createLayer();
+        layer.createLayer(false, true, 1.0);
 
         double[] outputBias = layer.getBiasValues();
         double[][] outputWeights = layer.getWeights();
@@ -49,11 +49,11 @@ class HiddenLayerTest {
         assertEquals(8, outputBias.length);
         assertEquals(8, outputWeights.length);
 
-      //  for (double value: outputBias)
-//            assertEquals(0.27707849007413665, value);
+        for (double value: outputBias)
+            assertEquals(1.0, value);
 
-    //    for (double[] outputWeight: outputWeights)
-  //          assertArrayEquals(new double[]{0.0, 0.0, 0.0, 0.0}, outputWeight);
+        for (double[] outputWeight: outputWeights)
+            assertArrayEquals(new double[]{1.0, 1.0, 1.0, 1.0}, outputWeight);
     }
 
     @Test
@@ -79,7 +79,7 @@ class HiddenLayerTest {
 
     @Test
     void setBiasValues() {
-        layer.createLayer();
+        layer.createLayer(false, true, 1.0);
         layer.setBiasValues(bias);
         double[] outputBias = layer.getBiasValues();
 
@@ -92,7 +92,7 @@ class HiddenLayerTest {
 
     @Test
     void setInputWeights() {
-        layer.createLayer();
+        layer.createLayer(false, true, 1.0);
         layer.setWeights(weights);
         double[][] outputWeights = layer.getWeights();
 
@@ -129,7 +129,7 @@ class HiddenLayerTest {
         long startTime = System.nanoTime();
         Instant start = Instant.now();
 
-        bigLayer.createLayer();
+        bigLayer.createLayer(true, false, 0.0);
         Thread.sleep(1000);
 
         Instant end = Instant.now();
@@ -144,6 +144,5 @@ class HiddenLayerTest {
 
         assertEquals(256, outputBias.length);
         assertEquals(256, outputWeights.length);
-
     }
 }

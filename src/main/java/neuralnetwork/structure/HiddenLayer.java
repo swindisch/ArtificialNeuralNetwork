@@ -1,28 +1,24 @@
 package neuralnetwork.structure;
 
+import java.util.Arrays;
+import java.util.Random;
+
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import neuralnetwork.activationfunctions.ActivationFunction;
 import neuralnetwork.activationfunctions.ActivationFunctionFactory;
 import neuralnetwork.activationfunctions.ActivationEnum;
 import neuralnetwork.neurons.HiddenNeuron;
-import neuralnetwork.neurons.InputNeuron;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
-import java.util.Random;
-
+@Slf4j
 public class HiddenLayer extends BaseLayer<HiddenNeuron> {
-    static final Logger logger = LogManager.getLogger(HiddenLayer.class.getName());
-
-    int idx = 0;
-    int numWeights = 0;
-    ActivationFunction actFunc = null;
+    protected int idx = 0;
+    protected ActivationFunction actFunc = null;
 
     public HiddenLayer(int idx, int size, int numWeights, ActivationEnum actFunc)
     {
-        super(size);
+        super(size, numWeights);
         this.idx = idx;
-        this.numWeights = numWeights;
         this.actFunc = ActivationFunctionFactory.createFromName(actFunc);
     }
 
@@ -30,32 +26,32 @@ public class HiddenLayer extends BaseLayer<HiddenNeuron> {
 
     public void createLayer(double[][] weights, double[] bias) {
         if (size < 1) {
-            logger.error("Size must be greater than 0!");
+            log.error("Size must be greater than 0!");
             return;
         }
 
         if (weights == null) {
-            logger.error("Weights must not be null!");
+            log.error("Weights must not be null!");
             return;
         }
 
         if (weights.length < 1) {
-            logger.error("Empty weights array not allow!");
+            log.error("Empty weights array not allow!");
             return;
         }
 
         if (layer == null) {
-            logger.error("Input array must be created!");
+            log.error("Input array must be created!");
             return;
         }
 
         if (bias == null) {
-            logger.error("Bias must not be null!");
+            log.error("Bias must not be null!");
             return;
         }
 
         if (bias.length < 1) {
-            logger.error("Empty bias array not allow!");
+            log.error("Empty bias array not allow!");
             return;
         }
 
@@ -67,22 +63,33 @@ public class HiddenLayer extends BaseLayer<HiddenNeuron> {
         }
     }
 
-    public void createLayer() {
+    public void createLayer(boolean setRandom, boolean setDefault, double defaultValue) {
         if (size < 1) {
-            logger.error("Size must be greater than 0!");
+            log.error("Size must be greater than 0!");
             return;
         }
 
         double[][] weights = new double[size][numWeights];
         double[] bias = new double[size];
 
-        Random r = new Random();
+        if (setRandom) {
+            Random r = new Random();
+            for (int j = 0; j < size; j++) {
+                bias[j] = r.nextGaussian();
 
-        for (int j = 0; j < size; j++) {
-            bias[j] = r.nextDouble();
+                for (int i = 0; i < numWeights; i++) {
+                    weights[j][i] =  r.nextGaussian();
+                }
+            }
+        }
 
-            for (int i = 0; i < numWeights; i++) {
-                weights[j][i] = ((double) (r.nextInt(100 + 100) - 100)) / 100.0;
+        if (setDefault) {
+            for (int j = 0; j < size; j++) {
+                bias[j] = defaultValue;
+
+                for (int i = 0; i < numWeights; i++) {
+                    weights[j][i] =  defaultValue;
+                }
             }
         }
 
@@ -91,7 +98,7 @@ public class HiddenLayer extends BaseLayer<HiddenNeuron> {
 
     public double[] getBiasValues() {
         if (size < 1) {
-            logger.error("Size must be greater than 0!");
+            log.error("Size must be greater than 0!");
         }
 
         double[] values = new double[size];
@@ -106,7 +113,7 @@ public class HiddenLayer extends BaseLayer<HiddenNeuron> {
 
     public void setBiasValues(double[] bias) {
         if (bias.length != size) {
-            logger.error("Length of layer and bias must be equal!");
+            log.error("Length of layer and bias must be equal!");
         }
 
         int idx = 0;
@@ -118,7 +125,7 @@ public class HiddenLayer extends BaseLayer<HiddenNeuron> {
 
     public double[][] getWeights() {
         if (size < 1) {
-            logger.error("Size must be greater than 0!");
+            log.error("Size must be greater than 0!");
         }
 
         double[][] weights = new double[size][];
@@ -133,7 +140,7 @@ public class HiddenLayer extends BaseLayer<HiddenNeuron> {
 
     public void setWeights(double[][] weights) {
         if (weights.length != size) {
-            logger.error("Length of layer and weights must be equal!");
+            log.error("Length of layer and weights must be equal!");
         }
 
         int idx = 0;
@@ -145,12 +152,12 @@ public class HiddenLayer extends BaseLayer<HiddenNeuron> {
     public double[] calcOutput(double[] input)
     {
         if (input == null) {
-            logger.error("Input value must not be null!");
+            log.error("Input value must not be null!");
             return null;
         }
 
         if (input.length != numWeights) {
-            logger.error("Length of input and weights must be equal!");
+            log.error("Length of input and weights must be equal!");
             return null;
         }
 
@@ -190,5 +197,9 @@ public class HiddenLayer extends BaseLayer<HiddenNeuron> {
     public double[] getNeuronWeights(int idxNeuron) {
         double[] weights = layer.get(idxNeuron).getWeights();
         return weights;
+    }
+
+    public void setNeuronWeights(int idxNeuron, double[] weights) {
+        layer.get(idxNeuron).setWeights(weights);
     }
 }

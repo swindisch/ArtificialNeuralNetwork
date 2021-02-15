@@ -22,7 +22,7 @@ public class MainComponent extends JComponent {
         hiddenAcFun[1] = ActivationEnum.SIGMOID;
 
         model = new NetworkModel(4, hiddenLayers, hiddenAcFun, 2, ActivationEnum.LINEAR);
-        model.createModel();
+        model.createModel(true, false, 0.0);
 
         new Thread(new Runnable() {
             private long simulationLastMillis;
@@ -38,7 +38,7 @@ public class MainComponent extends JComponent {
                             for (int idx = 0; idx < inputPic.length; idx++) {
                                 inputPic[idx] = ((double) (r.nextInt(100 + 100) - 100)) / 100.0;
                             }
-                            model.createModel();
+                            model.createModel(true, false, 0.0);
                             model.feedforward(inputPic);
 
                             repaint();
